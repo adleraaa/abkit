@@ -1,0 +1,89 @@
+{
+  "study": "aa_type1",
+  "seed": 101,
+  "reps": 10000,
+  "alpha": 0.05,
+  "rows": [
+    {
+      "method": "welch_t",
+      "scenario": "lognormal(0,1) revenue, n=1000/arm",
+      "reps": 10000,
+      "rejections": 477,
+      "rate": 0.0477,
+      "mc_se": 0.002131307345269565,
+      "target": 0.05
+    },
+    {
+      "method": "two_proportion_z",
+      "scenario": "conversion 10%, n=1000/arm",
+      "reps": 10000,
+      "rejections": 524,
+      "rate": 0.0524,
+      "mc_se": 0.002228323136351638,
+      "target": 0.05
+    },
+    {
+      "method": "cuped_welch_t",
+      "scenario": "normal, pre-period corr 0.7, n=1000/arm",
+      "reps": 10000,
+      "rejections": 519,
+      "rate": 0.0519,
+      "mc_se": 0.0022182513383293607,
+      "target": 0.05
+    },
+    {
+      "method": "delta_ratio_z",
+      "scenario": "revenue/session, user heterogeneity 1.0, 1000 users/arm",
+      "reps": 10000,
+      "rejections": 484,
+      "rate": 0.0484,
+      "mc_se": 0.002146099718093267,
+      "target": 0.05
+    },
+    {
+      "method": "naive_session_t",
+      "scenario": "same data, sessions treated as iid",
+      "reps": 10000,
+      "rejections": 4046,
+      "rate": 0.4046,
+      "mc_se": 0.004908144659644823,
+      "target": 0.05
+    },
+    {
+      "method": "srm_chi2 (p<0.001)",
+      "scenario": "true 50/50 split, 2000 users",
+      "reps": 10000,
+      "rejections": 12,
+      "rate": 0.0012,
+      "mc_se": 0.00034620225302559775,
+      "target": 0.001
+    },
+    {
+      "method": "10 metrics, no correction",
+      "scenario": "familywise error, 10 independent A/A metrics",
+      "reps": 10000,
+      "rejections": 4120,
+      "rate": 0.412,
+      "mc_se": 0.004921950832749145,
+      "target": 0.05
+    },
+    {
+      "method": "10 metrics, Holm",
+      "scenario": "familywise error, 10 independent A/A metrics",
+      "reps": 10000,
+      "rejections": 514,
+      "rate": 0.0514,
+      "mc_se": 0.002208122279222779,
+      "target": 0.05
+    },
+    {
+      "method": "10 metrics, Benjamini-Hochberg",
+      "scenario": "familywise error, 10 independent A/A metrics",
+      "reps": 10000,
+      "rejections": 528,
+      "rate": 0.0528,
+      "mc_se": 0.002236339866835987,
+      "target": 0.05
+    }
+  ]
+}

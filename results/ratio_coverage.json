@@ -1,0 +1,58 @@
+{
+  "study": "ratio_coverage",
+  "seed": 505,
+  "reps": 2000,
+  "n_users_per_arm": 1000,
+  "lift": 0.05,
+  "nominal": 0.95,
+  "rows": [
+    {
+      "heterogeneity": 0.0,
+      "true_diff": 0.056657422653341394,
+      "delta_coverage": 0.9495,
+      "naive_coverage": 0.9505,
+      "mean_width_delta": 0.04854237998242118,
+      "mean_width_naive": 0.04855384824448843
+    },
+    {
+      "heterogeneity": 0.25,
+      "true_diff": 0.058455922308475294,
+      "delta_coverage": 0.945,
+      "naive_coverage": 0.8075,
+      "mean_width_delta": 0.0829068996711937,
+      "mean_width_naive": 0.05693210474730722
+    },
+    {
+      "heterogeneity": 0.5,
+      "true_diff": 0.06420127083438709,
+      "delta_coverage": 0.9555,
+      "naive_coverage": 0.6875,
+      "mean_width_delta": 0.1615854939714558,
+      "mean_width_naive": 0.08308031054596762
+    },
+    {
+      "heterogeneity": 0.75,
+      "true_diff": 0.0750588900000062,
+      "delta_coverage": 0.9525,
+      "naive_coverage": 0.605,
+      "mean_width_delta": 0.29638155745647227,
+      "mean_width_naive": 0.13487539021571923
+    },
+    {
+      "heterogeneity": 1.0,
+      "true_diff": 0.0934122978716112,
+      "delta_coverage": 0.9475,
+      "naive_coverage": 0.5845,
+      "mean_width_delta": 0.5451814900006002,
+      "mean_width_naive": 0.23525630277926188
+    },
+    {
+      "heterogeneity": 1.5,
+      "true_diff": 0.17451714787309225,
+      "delta_coverage": 0.9485,
+      "naive_coverage": 0.577,
+      "mean_width_delta": 2.028736758086838,
+      "mean_width_naive": 0.858652345631089
+    }
+  ]
+}

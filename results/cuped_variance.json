@@ -1,0 +1,74 @@
+{
+  "study": "cuped_variance",
+  "seed": 303,
+  "reps": 2000,
+  "n_per_arm": 1000,
+  "rows": [
+    {
+      "rho": 0.0,
+      "variance_ratio": 1.0004098505305166,
+      "theory_1_minus_rho2": 1.0,
+      "mean_ci_width_ratio": 0.9997348849706919
+    },
+    {
+      "rho": 0.1,
+      "variance_ratio": 0.9920215767715278,
+      "theory_1_minus_rho2": 0.99,
+      "mean_ci_width_ratio": 0.9947698056761282
+    },
+    {
+      "rho": 0.2,
+      "variance_ratio": 0.971977072207349,
+      "theory_1_minus_rho2": 0.96,
+      "mean_ci_width_ratio": 0.9797085356413398
+    },
+    {
+      "rho": 0.3,
+      "variance_ratio": 0.9189408469940061,
+      "theory_1_minus_rho2": 0.91,
+      "mean_ci_width_ratio": 0.9534800542608911
+    },
+    {
+      "rho": 0.4,
+      "variance_ratio": 0.837758966700861,
+      "theory_1_minus_rho2": 0.84,
+      "mean_ci_width_ratio": 0.9165131613234522
+    },
+    {
+      "rho": 0.5,
+      "variance_ratio": 0.7288030392165211,
+      "theory_1_minus_rho2": 0.75,
+      "mean_ci_width_ratio": 0.8656261471355711
+    },
+    {
+      "rho": 0.6,
+      "variance_ratio": 0.6292056548123576,
+      "theory_1_minus_rho2": 0.64,
+      "mean_ci_width_ratio": 0.7997097516337843
+    },
+    {
+      "rho": 0.7,
+      "variance_ratio": 0.5035985217405899,
+      "theory_1_minus_rho2": 0.51,
+      "mean_ci_width_ratio": 0.7145490407576441
+    },
+    {
+      "rho": 0.8,
+      "variance_ratio": 0.3748255650990475,
+      "theory_1_minus_rho2": 0.3599999999999999,
+      "mean_ci_width_ratio": 0.5994746249765384
+    },
+    {
+      "rho": 0.9,
+      "variance_ratio": 0.2079588634607638,
+      "theory_1_minus_rho2": 0.18999999999999995,
+      "mean_ci_width_ratio": 0.43568340060662675
+    },
+    {
+      "rho": 0.95,
+      "variance_ratio": 0.10084120218173115,
+      "theory_1_minus_rho2": 0.09750000000000003,
+      "mean_ci_width_ratio": 0.3119107557468243
+    }
+  ]
+}

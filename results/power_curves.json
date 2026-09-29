@@ -1,0 +1,141 @@
+{
+  "study": "power_curves",
+  "seed": 202,
+  "reps": 2000,
+  "alpha": 0.05,
+  "proportions": {
+    "baseline": 0.1,
+    "n_per_arm": 4000,
+    "rows": [
+      {
+        "effect": 0.0,
+        "empirical": 0.05,
+        "analytic": 0.05
+      },
+      {
+        "effect": 0.0025,
+        "empirical": 0.06,
+        "analytic": 0.06587998286595964
+      },
+      {
+        "effect": 0.005,
+        "empirical": 0.1185,
+        "analytic": 0.11421674832910979
+      },
+      {
+        "effect": 0.0075,
+        "empirical": 0.192,
+        "analytic": 0.19601662547400767
+      },
+      {
+        "effect": 0.01,
+        "empirical": 0.308,
+        "analytic": 0.3085258665434755
+      },
+      {
+        "effect": 0.0125,
+        "empirical": 0.455,
+        "analytic": 0.44222754173021256
+      },
+      {
+        "effect": 0.015,
+        "empirical": 0.5715,
+        "analytic": 0.5817671814664356
+      },
+      {
+        "effect": 0.0175,
+        "empirical": 0.69,
+        "analytic": 0.7105138547216009
+      },
+      {
+        "effect": 0.02,
+        "empirical": 0.825,
+        "analytic": 0.8159668789457546
+      }
+    ]
+  },
+  "means": {
+    "sd": 1.0,
+    "rho": 0.7,
+    "n_per_arm": 500,
+    "rows": [
+      {
+        "effect": 0.0,
+        "welch_empirical": 0.0605,
+        "cuped_empirical": 0.0505,
+        "welch_analytic": 0.05,
+        "cuped_analytic": 0.05
+      },
+      {
+        "effect": 0.025,
+        "welch_empirical": 0.07,
+        "cuped_empirical": 0.083,
+        "welch_analytic": 0.06808422137450902,
+        "cuped_analytic": 0.08577201794131323
+      },
+      {
+        "effect": 0.05,
+        "welch_empirical": 0.124,
+        "cuped_empirical": 0.191,
+        "welch_analytic": 0.12409726467465317,
+        "cuped_analytic": 0.19792595516331776
+      },
+      {
+        "effect": 0.07500000000000001,
+        "welch_empirical": 0.242,
+        "cuped_empirical": 0.382,
+        "welch_analytic": 0.2202610278609964,
+        "cuped_analytic": 0.3824506921719339
+      },
+      {
+        "effect": 0.1,
+        "welch_empirical": 0.3755,
+        "cuped_empirical": 0.6115,
+        "welch_analytic": 0.35260808244470254,
+        "cuped_analytic": 0.6002954724080077
+      },
+      {
+        "effect": 0.125,
+        "welch_empirical": 0.512,
+        "cuped_empirical": 0.785,
+        "welch_analytic": 0.5066074738354691,
+        "cuped_analytic": 0.7903356637501673
+      },
+      {
+        "effect": 0.15000000000000002,
+        "welch_empirical": 0.679,
+        "cuped_empirical": 0.912,
+        "welch_analytic": 0.6597439590495948,
+        "cuped_analytic": 0.9132577296128113
+      },
+      {
+        "effect": 0.17500000000000002,
+        "welch_empirical": 0.7815,
+        "cuped_empirical": 0.972,
+        "welch_analytic": 0.7901762426233792,
+        "cuped_analytic": 0.9722283078548604
+      },
+      {
+        "effect": 0.2,
+        "welch_empirical": 0.8885,
+        "cuped_empirical": 0.9955,
+        "welch_analytic": 0.8853791407623514,
+        "cuped_analytic": 0.9932085798579232
+      },
+      {
+        "effect": 0.225,
+        "welch_empirical": 0.942,
+        "cuped_empirical": 0.9985,
+        "welch_analytic": 0.9449338239335305,
+        "cuped_analytic": 0.9987428691446862
+      },
+      {
+        "effect": 0.25,
+        "welch_empirical": 0.978,
+        "cuped_empirical": 1.0,
+        "welch_analytic": 0.9768628765134761,
+        "cuped_analytic": 0.9998249724076165
+      }
+    ]
+  }
+}

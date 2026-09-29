@@ -1,0 +1,108 @@
+{
+  "source": "https://raw.githubusercontent.com/0zz10/CookieCats-AB-Testing/master/datasets/cookie_cats.csv",
+  "rows": 90189,
+  "sum_gamerounds_summary": {
+    "median": 16.0,
+    "mean": 51.8724567297564,
+    "max": 49854,
+    "p99_9_cap": 1073.6240000000107
+  },
+  "main": {
+    "variant_col": "version",
+    "arm_sizes": {
+      "gate_30": 44700,
+      "gate_40": 45489
+    },
+    "srm": {
+      "observed": [
+        44700,
+        45489
+      ],
+      "expected": [
+        45094.5,
+        45094.5
+      ],
+      "statistic": 6.9024049496058275,
+      "p_value": 0.008607987810836262,
+      "threshold": 0.001,
+      "mismatch": false
+    },
+    "correction": "holm",
+    "comparisons": [
+      {
+        "metric": "retention_1",
+        "control": "gate_30",
+        "treatment": "gate_40",
+        "adjusted_p_value": 0.14881931059383827,
+        "method": "two_proportion_z",
+        "control_value": 0.4481879194630872,
+        "treatment_value": 0.44228274967574577,
+        "estimate": -0.005905169787341458,
+        "std_error": 0.003309892280304391,
+        "statistic": -1.7840862247974725,
+        "p_value": 0.07440965529691913,
+        "ci_low": -0.012392439449445217,
+        "ci_high": 0.0005820998747623016,
+        "alpha": 0.05,
+        "significant": false,
+        "relative_lift": -0.01317565585974659
+      },
+      {
+        "metric": "retention_7",
+        "control": "gate_30",
+        "treatment": "gate_40",
+        "adjusted_p_value": 0.004662749926842987,
+        "method": "two_proportion_z",
+        "control_value": 0.19020134228187918,
+        "treatment_value": 0.18200004396667327,
+        "estimate": -0.008201298315205913,
+        "std_error": 0.0025920140082940444,
+        "statistic": -3.164358912748191,
+        "p_value": 0.001554249975614329,
+        "ci_low": -0.013281552418885545,
+        "ci_high": -0.0031210442115262808,
+        "alpha": 0.05,
+        "significant": true,
+        "relative_lift": -0.043119034896460164
+      },
+      {
+        "metric": "sum_gamerounds",
+        "control": "gate_30",
+        "treatment": "gate_40",
+        "adjusted_p_value": 0.37592438409326173,
+        "method": "welch_t",
+        "control_value": 52.45626398210291,
+        "treatment_value": 51.29877552814966,
+        "estimate": -1.157488453953249,
+        "std_error": 1.3072504173054773,
+        "statistic": -0.885437433127067,
+        "p_value": 0.37592438409326173,
+        "ci_low": -3.7197051164946457,
+        "ci_high": 1.4047282085881476,
+        "alpha": 0.05,
+        "significant": false,
+        "relative_lift": -0.022065781397397313
+      }
+    ]
+  },
+  "robustness_capped_gamerounds": [
+    {
+      "metric": "sum_gamerounds_capped",
+      "control": "gate_30",
+      "treatment": "gate_40",
+      "adjusted_p_value": 0.8833711341172604,
+      "method": "welch_t",
+      "control_value": 51.03090791946309,
+      "treatment_value": 50.93526347028953,
+      "estimate": -0.09564444917356241,
+      "std_error": 0.6519842596663191,
+      "statistic": -0.14669748196453783,
+      "p_value": 0.8833711341172604,
+      "ci_low": -1.37352726765137,
+      "ci_high": 1.182238369304245,
+      "alpha": 0.05,
+      "significant": false,
+      "relative_lift": -0.0018742454930354825
+    }
+  ]
+}

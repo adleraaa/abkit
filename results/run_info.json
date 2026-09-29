@@ -1,0 +1,39 @@
+{
+  "config": {
+    "aa_type1": {
+      "reps": 10000,
+      "seed": 101
+    },
+    "power_curves": {
+      "reps": 2000,
+      "seed": 202
+    },
+    "cuped_variance": {
+      "reps": 2000,
+      "seed": 303
+    },
+    "peeking": {
+      "reps_null": 5000,
+      "reps_alt": 2000,
+      "seed": 404
+    },
+    "ratio_coverage": {
+      "reps": 2000,
+      "seed": 505
+    }
+  },
+  "seconds_per_study": {
+    "aa_type1": 60.2,
+    "power_curves": 19.6,
+    "cuped_variance": 17.3,
+    "peeking": 40.1,
+    "ratio_coverage": 17.6
+  },
+  "wall_seconds": 62.3,
+  "python": "3.13.7",
+  "numpy": "2.5.3",
+  "scipy": "1.18.1",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+  "cpu_count": 32
+}
