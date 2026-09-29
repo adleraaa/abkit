@@ -158,6 +158,10 @@ def analyze(
     missing = [c for c in [variant_col, *metrics, denominator, covariate] if c and c not in df]
     if missing:
         raise ValueError(f"columns not found: {', '.join(missing)}")
+    if covariate is not None and covariate in metrics:
+        # Adjusting a metric by itself removes all of its variance and leaves
+        # floating-point noise that looks "significant".
+        raise ValueError(f"covariate {covariate!r} is also a metric; use a pre-period column")
 
     labeled = df[df[variant_col].notna()]
     unlabeled = len(df) - len(labeled)

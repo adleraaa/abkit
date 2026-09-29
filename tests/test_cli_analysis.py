@@ -65,6 +65,8 @@ def test_analyze_errors(experiment_csv: Path) -> None:
         analyze(df, "variant", ["nope"])
     with pytest.raises(ValueError, match="control arm"):
         analyze(df, "variant", ["spend"], control="missing")
+    with pytest.raises(ValueError, match="also a metric"):
+        analyze(df, "variant", ["spend"], covariate="spend")
 
 
 def test_compare_rejects_covariate_for_non_mean_metrics(experiment_csv: Path) -> None:
