@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=69", "wheel"]
+requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -50,3 +50,7 @@ addopts = "-q"
 python_version = "3.12"
 strict = true
 files = ["src/abkit"]
+
+[tool.ruff.lint.per-file-ignores]
+# Inline CSS string: long lines are clearer than split selectors.
+"experiments/build_report.py" = ["E501"]
