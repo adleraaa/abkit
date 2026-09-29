@@ -43,9 +43,11 @@ def cuped_test(
     if ya.shape != xa.shape or yb.shape != xb.shape:
         raise ValueError("metric and covariate arrays must be aligned per arm")
 
-    # theta and the centering mean are estimated on both arms pooled. Using one
-    # shared theta keeps the adjustment identical across arms; per-arm thetas
-    # could differ and would leak treatment differences into the adjustment.
+    # theta and the centering mean are estimated on both arms pooled, as in
+    # Deng et al. (2013). This is the simple standard choice and is
+    # asymptotically equivalent to ANCOVA with a common slope. Per-arm slopes
+    # around the pooled mean (Lin 2013) are a valid alternative that can help when
+    # treatment changes the slope; they are not implemented here.
     y_all = np.concatenate([ya, yb])
     x_all = np.concatenate([xa, xb])
     theta = cuped_theta(y_all, x_all)

@@ -9,6 +9,7 @@ from statsmodels.stats.power import NormalIndPower
 from abkit import (
     benjamini_hochberg,
     holm,
+    minimum_detectable_effect,
     power_per_arm,
     sample_size_means,
     sample_size_per_arm,
@@ -94,9 +95,26 @@ def test_sample_size_reaches_target_power(baseline: float, rel_mde: float, power
         assert power_per_arm(var_a, var_b, n - 1, mde) < power + 1e-3
 
 
+def test_power_at_zero_effect_is_alpha() -> None:
+    assert power_per_arm(1.0, 1.0, 500, 0.0, alpha=0.05) == pytest.approx(0.05)
+    assert power_per_arm(0.09, 0.09, 4000, 0.0, alpha=0.01) == pytest.approx(0.01)
+
+
+def test_mde_inverts_sample_size() -> None:
+    mde = minimum_detectable_effect(1.0, 1.0, 5600)
+    # 5600 users per arm detect this effect with 80% power (plus the ~1e-6 chance
+    # of rejecting in the wrong direction, which the sample-size formula ignores).
+    assert power_per_arm(1.0, 1.0, 5600, mde) == pytest.approx(0.8, abs=1e-5)
+    assert sample_size_per_arm(1.0, 1.0, mde) in (5600, 5601)
+
+
 def test_power_input_validation() -> None:
     with pytest.raises(ValueError):
         sample_size_per_arm(1, 1, mde=0)
+    with pytest.raises(ValueError):
+        power_per_arm(1, 1, 0, 0.1)
+    with pytest.raises(ValueError):
+        power_per_arm(0, 0, 100, 0.1)
     with pytest.raises(ValueError):
         sample_size_proportions(0.95, 0.1)
     with pytest.raises(ValueError):

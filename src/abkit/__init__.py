@@ -4,6 +4,7 @@ from abkit.cuped import cuped_test, cuped_theta
 from abkit.means import welch_from_stats, welch_ttest
 from abkit.multiple import benjamini_hochberg, holm
 from abkit.power import (
+    minimum_detectable_effect,
     power_per_arm,
     sample_size_means,
     sample_size_per_arm,
@@ -27,6 +28,7 @@ __all__ = [
     "cuped_theta",
     "delta_ratio_test",
     "holm",
+    "minimum_detectable_effect",
     "msprt_log_lambda",
     "msprt_monitor",
     "power_per_arm",

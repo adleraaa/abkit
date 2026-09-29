@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+import statsmodels.api as sm
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
@@ -59,15 +60,23 @@ def test_cuped_theta_is_ols_slope() -> None:
     assert cuped_theta(y, x) == pytest.approx(np.polyfit(x, y, 1)[0])
 
 
-def test_cuped_estimate_formula_and_variance_reduction() -> None:
+def test_cuped_agrees_with_ancova_and_reduces_variance() -> None:
+    """Independent oracle: OLS of y on [1, treatment, x] (ANCOVA, common slope).
+
+    Pooled-theta CUPED and ANCOVA differ only by a second-order term, so the
+    estimates and standard errors should agree to a small fraction of the SE.
+    """
     rng = np.random.default_rng(5)
     xa, xb = rng.normal(size=2000), rng.normal(size=2000)
     ya = xa + 0.3 * rng.normal(size=2000)
     yb = xb + 0.3 * rng.normal(size=2000) + 0.05
     res = cuped_test(ya, xa, yb, xb)
-    theta = cuped_theta(np.concatenate([ya, yb]), np.concatenate([xa, xb]))
-    expected = (yb.mean() - ya.mean()) - theta * (xb.mean() - xa.mean())
-    assert res.estimate == pytest.approx(expected)
+
+    treat = np.r_[np.zeros(2000), np.ones(2000)]
+    design = sm.add_constant(np.column_stack([treat, np.r_[xa, xb]]))
+    ols = sm.OLS(np.r_[ya, yb], design).fit()
+    assert abs(res.estimate - ols.params[1]) < 0.02 * res.std_error
+    assert res.std_error == pytest.approx(ols.bse[1], rel=0.02)
     # corr(x, y) ~ 0.96, so the standard error should shrink by roughly 3x or more.
     assert res.std_error < welch_ttest(ya, yb).std_error / 3
 

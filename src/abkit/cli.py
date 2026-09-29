@@ -13,10 +13,21 @@ from abkit.analysis import Report, analyze
 from abkit.power import sample_size_means, sample_size_proportions
 
 
-def _parse_split(text: str | None) -> list[float] | None:
+def _parse_split(text: str | None) -> dict[str, float] | None:
+    """Parse ``gate_30=50,gate_40=50`` into ``{"gate_30": 50.0, "gate_40": 50.0}``.
+
+    Weights are named rather than positional so that they cannot be paired with
+    the wrong arm (arm order depends on which arm is the control).
+    """
     if text is None:
         return None
-    return [float(part) for part in text.split(",")]
+    split: dict[str, float] = {}
+    for part in text.split(","):
+        label, sep, weight = part.partition("=")
+        if not sep or not label.strip():
+            raise ValueError(f"--expected-split takes label=weight pairs, got {part!r}")
+        split[label.strip()] = float(weight)
+    return split
 
 
 def format_report(report: Report, alpha: float) -> str:
@@ -25,15 +36,18 @@ def format_report(report: Report, alpha: float) -> str:
     sizes = ", ".join(f"{arm}={n}" for arm, n in report.arm_sizes.items())
     lines.append(f"Arms ({report.variant_col}): {sizes}")
     srm = report.srm
+    expected = ", ".join(
+        f"{arm}={e:.1f}" for arm, e in zip(report.arm_sizes, srm.expected, strict=True)
+    )
     verdict = "MISMATCH - do not trust the results below" if srm.mismatch else "ok"
     lines.append(
-        f"SRM check: chi2={srm.statistic:.3f}, p={srm.p_value:.4g} "
+        f"SRM check: expected {expected}; chi2={srm.statistic:.3f}, p={srm.p_value:.4g} "
         f"(threshold {srm.threshold}) -> {verdict}"
     )
     lines.append("")
     header = (
-        f"{'metric':<18}{'treatment':<12}{'method':<17}{'control':>11}{'treat':>11}"
-        f"{'diff':>11}{'lift':>8}{'95% CI':>25}{'p':>10}{'p_adj':>10}  sig"
+        f"{'metric':<18}{'treatment':<12}{'method':<17}{'n_c':>8}{'n_t':>8}{'control':>11}"
+        f"{'treat':>11}{'diff':>11}{'lift':>8}{'95% CI':>25}{'p':>10}{'p_adj':>10}  sig"
     )
     lines.append(header)
     lines.append("-" * len(header))
@@ -43,14 +57,15 @@ def format_report(report: Report, alpha: float) -> str:
         lift = f"{100 * r.relative_lift:.2f}%"
         sig = "yes" if c.adjusted_p_value < alpha else "no"
         lines.append(
-            f"{c.metric:<18}{c.treatment:<12}{r.method:<17}{r.control_value:>11.4g}"
-            f"{r.treatment_value:>11.4g}{r.estimate:>11.4g}{lift:>8}{ci:>25}"
-            f"{r.p_value:>10.4g}{c.adjusted_p_value:>10.4g}  {sig}"
+            f"{c.metric:<18}{c.treatment:<12}{r.method:<17}{c.n_control:>8}{c.n_treatment:>8}"
+            f"{r.control_value:>11.4g}{r.treatment_value:>11.4g}{r.estimate:>11.4g}{lift:>8}"
+            f"{ci:>25}{r.p_value:>10.4g}{c.adjusted_p_value:>10.4g}  {sig}"
         )
     lines.append("")
     lines.append(
         f"p_adj: {report.correction} correction across all rows; sig uses p_adj < {alpha}."
     )
+    lines.extend(f"note: {note}" for note in report.notes)
     return "\n".join(lines)
 
 
@@ -80,7 +95,7 @@ def _cmd_power(args: argparse.Namespace) -> int:
         raise ValueError("give exactly one of --baseline (proportion) or --sd (mean)")
     if args.baseline is not None:
         n = sample_size_proportions(args.baseline, args.mde, args.alpha, args.power)
-        what = f"conversion {args.baseline} -> {args.baseline + args.mde}"
+        what = f"conversion {args.baseline:g} -> {args.baseline + args.mde:g}"
     else:
         n = sample_size_means(args.sd, args.mde, args.alpha, args.power)
         what = f"mean shift {args.mde} with sd {args.sd}"
@@ -103,10 +118,19 @@ def build_parser() -> argparse.ArgumentParser:
         default="auto",
         help="auto: ratio if --denominator, proportion if 0/1, else mean",
     )
-    p_an.add_argument("--denominator", help="per-user denominator column for ratio metrics")
-    p_an.add_argument("--covariate", help="pre-period covariate column for CUPED")
+    p_an.add_argument(
+        "--denominator",
+        help="per-user denominator column; with --kind auto it makes every --metric a ratio metric",
+    )
+    p_an.add_argument(
+        "--covariate",
+        help="pre-period covariate column for CUPED; applied to mean metrics only",
+    )
     p_an.add_argument("--correction", choices=["none", "holm", "bh"], default="holm")
-    p_an.add_argument("--expected-split", help="intended split, e.g. 50,50 (default: equal)")
+    p_an.add_argument(
+        "--expected-split",
+        help="intended split as label=weight pairs, e.g. a=90,b=10 (default: equal)",
+    )
     p_an.add_argument("--alpha", type=float, default=0.05)
     p_an.add_argument("--json", action="store_true", help="print JSON instead of a table")
     p_an.set_defaults(func=_cmd_analyze)

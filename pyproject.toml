@@ -9,7 +9,7 @@ description = "Statistical tests for online A/B experiments, with a simulation s
 readme = "README.md"
 license = "MIT"
 authors = [{ name = "Yunlong Lu" }]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
     "numpy>=1.26",
     "scipy>=1.11",
@@ -37,7 +37,7 @@ where = ["src"]
 
 [tool.ruff]
 line-length = 100
-target-version = "py310"
+target-version = "py311"
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP", "SIM", "NPY", "RUF"]

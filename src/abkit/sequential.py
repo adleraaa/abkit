@@ -65,6 +65,14 @@ class SequentialResult:
                 return i
         return None
 
+    @property
+    def ci_empty_at(self) -> int | None:
+        """0-based index of the first look where the running CI became empty, or None."""
+        for i, lo in enumerate(self.ci_low):
+            if math.isnan(lo):
+                return i
+        return None
+
 
 def msprt_monitor(
     diffs: Sequence[float],
@@ -77,6 +85,11 @@ def msprt_monitor(
     The p-value is the running minimum of 1/Lambda and the CI is the running
     intersection of per-look intervals. Both are valid simultaneously over all
     looks, which is exactly what makes "stop whenever p < alpha" safe.
+
+    If the per-look intervals stop overlapping, the intersection is empty. That
+    means the data contradict the model (a constant effect with the plug-in
+    variance), so the CI bounds are reported as NaN from that look on instead of
+    as an inverted interval; ``ci_empty_at`` gives the first such look.
     """
     if len(diffs) != len(var_diffs):
         raise ValueError("diffs and var_diffs must have the same length")
@@ -86,7 +99,12 @@ def msprt_monitor(
     for d, v in zip(diffs, var_diffs, strict=True):
         p_running = min(p_running, math.exp(-max(msprt_log_lambda(d, v, tau2), 0.0)))
         lo, hi = always_valid_ci(d, v, tau2, alpha)
-        lo_running, hi_running = max(lo_running, lo), min(hi_running, hi)
+        # Once empty, stay empty. Python's max/min do not propagate NaN reliably,
+        # so the empty state is checked explicitly.
+        if not math.isnan(lo_running):
+            lo_running, hi_running = max(lo_running, lo), min(hi_running, hi)
+            if lo_running > hi_running:
+                lo_running = hi_running = math.nan
         p_values.append(p_running)
         ci_low.append(lo_running)
         ci_high.append(hi_running)
