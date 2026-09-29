@@ -18,7 +18,7 @@ from numpy.typing import NDArray
 from abkit.cuped import cuped_test
 from abkit.means import welch_from_stats, welch_ttest
 from abkit.multiple import benjamini_hochberg, holm
-from abkit.power import power_per_arm
+from abkit.power import minimum_detectable_effect, power_per_arm
 from abkit.proportions import two_proportion_ztest
 from abkit.ratio import delta_ratio_test
 from abkit.sequential import msprt_monitor
@@ -190,10 +190,8 @@ def power_curves(reps: int, seed: int, alpha: float = 0.05) -> dict[str, Any]:
             ).significant
             for _ in range(reps)
         )
-        analytic = (
-            power_per_arm(baseline * (1 - baseline), p_b * (1 - p_b), n_prop, float(effect), alpha)
-            if effect > 0
-            else alpha
+        analytic = power_per_arm(
+            baseline * (1 - baseline), p_b * (1 - p_b), n_prop, float(effect), alpha
         )
         prop_rows.append({"effect": float(effect), "empirical": hits / reps, "analytic": analytic})
 
@@ -214,10 +212,8 @@ def power_curves(reps: int, seed: int, alpha: float = 0.05) -> dict[str, Any]:
                 "effect": eff,
                 "welch_empirical": welch_hits / reps,
                 "cuped_empirical": cuped_hits / reps,
-                "welch_analytic": power_per_arm(1, 1, n_mean, eff, alpha) if eff > 0 else alpha,
-                "cuped_analytic": power_per_arm(residual, residual, n_mean, eff, alpha)
-                if eff > 0
-                else alpha,
+                "welch_analytic": power_per_arm(1, 1, n_mean, eff, alpha),
+                "cuped_analytic": power_per_arm(residual, residual, n_mean, eff, alpha),
             }
         )
     return {
@@ -282,10 +278,14 @@ def _peeking_run(
         # Cumulative mean and variance at the end of each day.
         stats_ab = []
         for arm in (a, b):
-            s = np.cumsum(arm.sum(axis=1))
-            ss = np.cumsum((arm**2).sum(axis=1))
-            mean = s / n
-            var = (ss - n * mean**2) / (n - 1)
+            # Running sums of squares lose precision when mean^2 >> variance, so
+            # shift by a value close to the mean first (the variance is unchanged).
+            shift = float(arm[0].mean())
+            centered = arm - shift
+            s = np.cumsum(centered.sum(axis=1))
+            ss = np.cumsum((centered**2).sum(axis=1))
+            var = (ss - s**2 / n) / (n - 1)
+            mean = shift + s / n
             stats_ab.append((mean, var))
         (mean_a, var_a), (mean_b, var_b) = stats_ab
 
@@ -342,7 +342,7 @@ def peeking(
     rng = np.random.default_rng(seed)
     n_final = days * users_per_day
     # Effect with 80% power for the fixed-horizon z-test with unit variance.
-    mde = (1.959963984540054 + 0.8416212335729143) * math.sqrt(2 / n_final)
+    mde = minimum_detectable_effect(1.0, 1.0, n_final, alpha, power=0.8)
     taus = [mde / 2, mde, 2 * mde, 4 * mde]
     return {
         "study": "peeking",

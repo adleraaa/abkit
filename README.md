@@ -17,7 +17,7 @@ Report page with all figures and tables: https://adleraaa.github.io/abkit/
 All numbers below come from `experiments/run_study.py` (seeded, saved in
 [`results/*.json`](results/)) and `experiments/cookie_cats.py`
 ([`results/cookie_cats.json`](results/cookie_cats.json)). The full table set is in
-[`results/summary.md`](results/summary.md). The whole simulation study takes 62 s of
+[`results/summary.md`](results/summary.md). The whole simulation study takes 55 s of
 wall time on a laptop CPU (Intel i9-14900HX, 5 studies in parallel processes, Python
 3.13, numpy 2.5; see [`results/run_info.json`](results/run_info.json)).
 
@@ -31,9 +31,9 @@ wall time on a laptop CPU (Intel i9-14900HX, 5 studies in parallel processes, Py
 | Delta method, revenue per session | 1000 users/arm, clustered sessions | 4.84% | 5% |
 | Naive t-test treating sessions as iid | same data | **40.46%** | 5% |
 | SRM chi-square at p < 0.001 | true 50/50 split | 0.12% | 0.1% |
-| 10 independent metrics, no correction (any rejection) | | **41.20%** | 5% |
-| 10 metrics, Holm | | 5.14% | 5% |
-| 10 metrics, Benjamini-Hochberg | | 5.28% | 5% |
+| 10 independent metrics, no correction (any rejection) | normal, 200/arm, 10 metrics | **41.20%** | 5% |
+| 10 metrics, Holm | normal, 200/arm, 10 metrics | 5.14% | 5% |
+| 10 metrics, Benjamini-Hochberg | normal, 200/arm, 10 metrics | 5.28% | 5% |
 
 **Peeking** (28 daily looks, 200 users/arm/day; effect = the MDE that one test at day 28
 detects with 80% power; tau is the mSPRT prior sd):
@@ -54,7 +54,7 @@ early matters; this study does not show it winning on raw power.
 **Ratio metric CI coverage** (revenue per session, true lift +5%, 2,000 reps per row):
 with no user heterogeneity both CIs cover 95.0%. As user-level heterogeneity grows the
 naive per-session CI drops to 80.8%, 68.8%, 60.5%, 58.5% and 57.7%, while the delta
-method stays between 94.5% and 95.5%.
+method stays between 94.5% and 95.6%.
 
 **CUPED**: the simulated variance ratio tracks 1 - rho^2 (e.g. 0.504 vs 0.51 at
 rho = 0.7, 0.208 vs 0.19 at rho = 0.9). **Power formula**: across all effect sizes,
@@ -103,7 +103,7 @@ also an end-to-end test of the library rather than of a separate re-implementati
 ```bash
 python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -e ".[dev]"
-pytest                                               # 45 tests
+pytest                                               # 57 tests
 
 abkit power --baseline 0.10 --mde 0.01
 # conversion 0.1 -> 0.11: 14749 users per arm (29498 total) for power=0.8, alpha=0.05
@@ -114,10 +114,25 @@ abkit analyze data/cookie_cats.csv --variant-col version --control gate_30 \
 ```
 
 `abkit analyze` expects one row per randomization unit. It picks the test per metric
-(`--kind auto`: 0/1 columns get the z-test, `--denominator COL` makes a delta-method
-ratio metric, otherwise Welch), uses CUPED when `--covariate COL` is given, runs an SRM
-check against `--expected-split` (default equal), and applies `--correction holm|bh|none`
-across all metric x treatment comparisons. `--json` prints machine-readable output.
+(`--kind auto`: 0/1 columns get the z-test, otherwise Welch), runs an SRM check, and
+applies `--correction holm|bh|none` across all metric x treatment comparisons. `--json`
+prints machine-readable output. Details that matter on real exports:
+
+- `--denominator COL` and `--covariate COL` apply to every `--metric`. With a denominator,
+  every metric becomes a delta-method ratio metric (a 0/1 metric then becomes
+  conversions per session). The covariate enables CUPED for mean metrics only; the output
+  notes each metric it was not applied to. Run the CLI twice if metrics need different
+  settings.
+- Missing values are dropped per metric: a user missing the metric (or its denominator or
+  covariate) is left out of that metric's test only. The table shows the users used per
+  arm (`n_c`, `n_t`) and a note gives the number dropped. This assumes missingness is
+  unrelated to treatment; if one arm loses far more rows, investigate before trusting the
+  result.
+- Rows with an empty arm label are dropped and counted in a note. The SRM check uses all
+  labeled users, whether or not their metrics are missing.
+- `--expected-split` takes named weights, e.g. `--expected-split gate_30=50,gate_40=50`,
+  and must name every arm (default: equal split). The SRM line prints the expected count
+  per arm.
 
 Library use:
 
@@ -151,9 +166,16 @@ Seeds are fixed per study, so the same numpy version reproduces the same numbers
 - **Ratio metrics are aggregated to the randomization unit and use the delta method.**
   The A/A study shows why: treating sessions as independent gave a 40% false-positive
   rate when the true unit of randomization is the user.
-- **CUPED uses one pooled theta for both arms.** Per-arm thetas would let the treatment
-  effect leak into the adjustment. Theta is treated as known in the t-test; the A/A rate
-  (5.19%) shows that simplification is harmless at 1000 users per arm.
+- **CUPED uses one pooled theta for both arms**, as in Deng et al. (2013). It is the
+  simple standard choice and is asymptotically equivalent to ANCOVA with a common slope
+  (a test checks this against statsmodels OLS). Per-arm slopes around the pooled mean
+  (Lin 2013) are an alternative that can help when treatment changes the slope; they are
+  not implemented. Theta is treated as known in the t-test; the A/A rate (5.19%) shows
+  that simplification is harmless at 1000 users per arm.
+- **Missing values are dropped per metric and counted, not rejected or imputed.** Real
+  exports have blanks; an earlier version counted a blank 0/1 cell as a non-conversion,
+  which biased rates silently. Dropping and reporting the counts keeps the other metrics
+  usable and makes the loss visible.
 - **SRM threshold of 0.001 instead of 0.05.** The check runs on every experiment, so a
   strict threshold keeps false alarms near 0.1% (measured 0.12%), while real assignment
   bugs at production sample sizes give far smaller p-values.
@@ -168,7 +190,9 @@ Seeds are fixed per study, so the same numpy version reproduces the same numbers
   least 500 users per arm and do not measure behavior at small n.
 - The mSPRT guarantee is asymptotic because the variance is estimated; the simulations
   use normal data with 200+ users per arm at the first look. Heavy-tailed metrics were
-  not studied for the sequential case.
+  not studied for the sequential case. If the per-look CIs stop overlapping,
+  `msprt_monitor` reports the running CI as NaN (`ci_empty_at`) rather than an inverted
+  interval, since that means the constant-effect model does not fit the data.
 - CUPED is implemented for mean metrics only (not for ratio or proportion metrics via the
   CLI). No stratification, no heterogeneous-effect analysis, no Bayesian methods.
 - The Cookie Cats data has no pre-period covariate or timestamps, so CUPED and sequential
@@ -179,11 +203,14 @@ Seeds are fixed per study, so the same numpy version reproduces the same numbers
 ## Data
 
 Cookie Cats A/B test data: published by DataCamp for the project "Mobile Games A/B
-Testing with Cookie Cats" (Rasmus Baath), with data from Tactile Entertainment. We found
-no stated license or redistribution terms, so the file is **not** committed;
-`scripts/download_cookie_cats.py` downloads it from a public GitHub copy
+Testing with Cookie Cats" (Rasmus Baath), with data from Tactile Entertainment.
+`scripts/download_cookie_cats.py` downloads it from a public GitHub mirror
 (https://github.com/0zz10/CookieCats-AB-Testing, file `datasets/cookie_cats.csv`) and
-verifies its SHA-256.
+verifies its SHA-256 (`5ab54d76...342c46bd`, full hash in the script and in
+`results/cookie_cats.json`). The mirror has an MIT LICENSE from its uploader
+("Copyright (c) 2020 0zz10_mac"). That license covers the uploader's own work and cannot
+grant rights to data owned by DataCamp or Tactile Entertainment, and we found no license
+from them, so the CSV is **not** committed here.
 
 ## References
 
@@ -192,6 +219,8 @@ verifies its SHA-256.
 - Deng, Knoblich, Lu (2018). Applying the Delta Method in Metric Analytics. KDD.
 - Johari, Koomen, Pekelis, Walsh (2017). Peeking at A/B Tests: Why it matters, and what
   to do about it. KDD.
+- Lin (2013). Agnostic notes on regression adjustments to experimental data: Reexamining
+  Freedman's critique. Annals of Applied Statistics.
 - Fabijan et al. (2019). Diagnosing Sample Ratio Mismatch in Online Controlled
   Experiments. KDD.
 

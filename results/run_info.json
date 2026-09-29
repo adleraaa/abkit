@@ -23,13 +23,13 @@
     }
   },
   "seconds_per_study": {
-    "aa_type1": 60.2,
-    "power_curves": 19.6,
-    "cuped_variance": 17.3,
-    "peeking": 40.1,
-    "ratio_coverage": 17.6
+    "aa_type1": 52.7,
+    "power_curves": 21.0,
+    "cuped_variance": 18.5,
+    "peeking": 42.1,
+    "ratio_coverage": 18.3
   },
-  "wall_seconds": 62.3,
+  "wall_seconds": 54.9,
   "python": "3.13.7",
   "numpy": "2.5.3",
   "scipy": "1.18.1",

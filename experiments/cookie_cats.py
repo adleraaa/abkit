@@ -10,6 +10,7 @@ Run ``python scripts/download_cookie_cats.py`` first.
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -44,6 +45,8 @@ def main() -> None:
     rounds = df["sum_gamerounds"]
     payload = {
         "source": "https://raw.githubusercontent.com/0zz10/CookieCats-AB-Testing/master/datasets/cookie_cats.csv",
+        "mirror": "https://github.com/0zz10/CookieCats-AB-Testing",
+        "sha256": hashlib.sha256(DATA.read_bytes()).hexdigest(),
         "rows": len(df),
         "sum_gamerounds_summary": {
             "median": float(rounds.median()),

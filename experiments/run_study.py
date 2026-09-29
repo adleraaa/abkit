@@ -1,7 +1,7 @@
 """Run the full simulation study and save the results as JSON under results/.
 
 Usage:
-    python experiments/run_study.py            # full size (a few minutes on a laptop CPU)
+    python experiments/run_study.py            # full size (about 1-1.5 min with 5 processes)
     python experiments/run_study.py --quick    # tiny smoke run into a temp folder
 
 Each study has its own fixed seed, so results are reproducible bit for bit on

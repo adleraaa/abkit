@@ -76,6 +76,8 @@ Revenue per session with user-level randomization; the true treatment effect is 
 
 90,189 players. SRM check: arms [44700, 45489], chi2 = 6.90, p = 0.0086 (threshold 0.001).
 
+Source: https://github.com/0zz10/CookieCats-AB-Testing (SHA-256 `5ab54d761fbddcd50de7b88e4eaf7837cba4569474f50c043a4d17ee342c46bd`).
+
 | Metric | Test | gate_30 | gate_40 | Diff (lift) | 95% CI | p | p (Holm) |
 |---|---|---|---|---|---|---|---|
 | retention_1 | two_proportion_z | 0.4482 | 0.4423 | -0.005905 (-1.32%) | [-0.01239, 0.0005821] | 0.0744 | 0.149 |

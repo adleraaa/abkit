@@ -189,7 +189,7 @@ def fig_peeking() -> None:
         color=INK,
         s=40,
         zorder=3,
-        label="fixed-horizon t-test (day 28)",
+        label=f"fixed-horizon t-test (day {days[-1]})",
     )
     ax2.set_title(f"Effect = MDE: detections so far ({alt['reps']:,} reps)")
     ax2.set_xlabel("Day")

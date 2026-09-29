@@ -38,13 +38,13 @@ def aa_table() -> Table:
 
 def peeking_table() -> Table:
     d = load("peeking")
-    null, alt = d["null"], d["alternative"]
+    null, alt, days = d["null"], d["alternative"], d["days"]
     rows = [
         [
-            "t-test once at day 28 (fixed horizon)",
+            f"t-test once at day {days} (fixed horizon)",
             pct(null["fixed_horizon_reject"]),
             pct(alt["fixed_horizon_reject"]),
-            "28 (fixed)",
+            f"{days} (fixed)",
         ],
         [
             "t-test every day, stop at first p < 0.05",
@@ -65,7 +65,7 @@ def peeking_table() -> Table:
             ]
         )
     header = [
-        "Procedure (28 daily looks)",
+        f"Procedure ({days} daily looks)",
         f"False positive rate (A/A, {null['reps']:,} reps)",
         f"Power at effect = MDE ({alt['reps']:,} reps)",
         "Mean stopping day when it rejects",
@@ -174,6 +174,7 @@ def html_table(table: Table) -> str:
 
 def sections() -> list[tuple[str, str, Table, str | None]]:
     """(title, explanation, table, figure) for each study, in page order."""
+    peek = load("peeking")
     return [
         (
             "A/A Type I error",
@@ -198,8 +199,9 @@ def sections() -> list[tuple[str, str, Table, str | None]]:
         ),
         (
             "Peeking: daily t-tests vs. mSPRT",
-            "28 days, 200 users per arm per day, normal data. The MDE is the effect that the "
-            "single day-28 test detects with 80% power.",
+            f"{peek['days']} days, {peek['users_per_day_per_arm']} users per arm per day, normal "
+            f"data. The MDE is the effect that the single day-{peek['days']} test detects with "
+            "80% power.",
             peeking_table(),
             "peeking.png",
         ),
@@ -229,6 +231,8 @@ def build_markdown() -> str:
         "",
         f"{d['rows']:,} players. SRM check: arms {srm['observed']}, chi2 = "
         f"{srm['statistic']:.2f}, p = {srm['p_value']:.4f} (threshold {srm['threshold']}).",
+        "",
+        f"Source: {d['mirror']} (SHA-256 `{d['sha256']}`).",
         "",
         md_table(table),
         "",
@@ -288,8 +292,12 @@ def build_html() -> str:
         f"<p>{d['rows']:,} players randomized to the first gate at level 30 (control) or 40. "
         f"SRM check: arms {srm['observed']}, chi2 = {srm['statistic']:.2f}, "
         f"p = {srm['p_value']:.4f}, which passes the 0.001 threshold but would fail at 0.01. "
-        "Data from DataCamp's Cookie Cats project (Tactile Entertainment); it is downloaded by "
-        "<code>scripts/download_cookie_cats.py</code>, not redistributed.</p>"
+        'Data from DataCamp\'s project "Mobile Games A/B Testing with Cookie Cats" (data from '
+        "Tactile Entertainment), downloaded by <code>scripts/download_cookie_cats.py</code> "
+        f'from the public mirror <a href="{html.escape(d["mirror"])}">'
+        f"{html.escape(d['mirror'])}</a> and not redistributed here. SHA-256 of the analyzed "
+        f"file: <code>{d['sha256']}</code>. The mirror carries an MIT license from its uploader; "
+        "we found no license from the original data owners.</p>"
     )
     body.append(html_table(table))
     return (

@@ -1,5 +1,7 @@
 {
   "source": "https://raw.githubusercontent.com/0zz10/CookieCats-AB-Testing/master/datasets/cookie_cats.csv",
+  "mirror": "https://github.com/0zz10/CookieCats-AB-Testing",
+  "sha256": "5ab54d761fbddcd50de7b88e4eaf7837cba4569474f50c043a4d17ee342c46bd",
   "rows": 90189,
   "sum_gamerounds_summary": {
     "median": 16.0,
@@ -13,7 +15,12 @@
       "gate_30": 44700,
       "gate_40": 45489
     },
+    "unlabeled_rows": 0,
     "srm": {
+      "arms": [
+        "gate_30",
+        "gate_40"
+      ],
       "observed": [
         44700,
         45489
@@ -28,11 +35,16 @@
       "mismatch": false
     },
     "correction": "holm",
+    "notes": [],
     "comparisons": [
       {
         "metric": "retention_1",
         "control": "gate_30",
         "treatment": "gate_40",
+        "n_control": 44700,
+        "n_treatment": 45489,
+        "dropped_control": 0,
+        "dropped_treatment": 0,
         "adjusted_p_value": 0.14881931059383827,
         "method": "two_proportion_z",
         "control_value": 0.4481879194630872,
@@ -51,6 +63,10 @@
         "metric": "retention_7",
         "control": "gate_30",
         "treatment": "gate_40",
+        "n_control": 44700,
+        "n_treatment": 45489,
+        "dropped_control": 0,
+        "dropped_treatment": 0,
         "adjusted_p_value": 0.004662749926842987,
         "method": "two_proportion_z",
         "control_value": 0.19020134228187918,
@@ -69,6 +85,10 @@
         "metric": "sum_gamerounds",
         "control": "gate_30",
         "treatment": "gate_40",
+        "n_control": 44700,
+        "n_treatment": 45489,
+        "dropped_control": 0,
+        "dropped_treatment": 0,
         "adjusted_p_value": 0.37592438409326173,
         "method": "welch_t",
         "control_value": 52.45626398210291,
@@ -90,6 +110,10 @@
       "metric": "sum_gamerounds_capped",
       "control": "gate_30",
       "treatment": "gate_40",
+      "n_control": 44700,
+      "n_treatment": 45489,
+      "dropped_control": 0,
+      "dropped_treatment": 0,
       "adjusted_p_value": 0.8833711341172604,
       "method": "welch_t",
       "control_value": 51.03090791946309,

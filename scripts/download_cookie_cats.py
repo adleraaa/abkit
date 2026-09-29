@@ -1,11 +1,15 @@
 """Download the Cookie Cats A/B test dataset into data/cookie_cats.csv.
 
-The dataset is not committed to this repository because its redistribution
-terms are not stated anywhere we could find. It was published by DataCamp for
-the project "Mobile Games A/B Testing with Cookie Cats" (Rasmus Baath), using
-data from the game's developer, Tactile Entertainment. We download it from a
-public GitHub copy of that project and verify a SHA-256 checksum, so every run
-analyzes exactly the same file.
+The data was published by DataCamp for the project "Mobile Games A/B Testing
+with Cookie Cats" (Rasmus Baath), using data from the game's developer, Tactile
+Entertainment. We download it from a public GitHub mirror of that project
+(https://github.com/0zz10/CookieCats-AB-Testing) and verify a SHA-256 checksum,
+so every run analyzes exactly the same file.
+
+The mirror has an MIT LICENSE ("Copyright (c) 2020 0zz10_mac"). That license
+covers the uploader's own work; it cannot grant rights to data owned by DataCamp
+or Tactile Entertainment, and we found no license from them. So the CSV is not
+committed to this repository.
 """
 
 from __future__ import annotations
