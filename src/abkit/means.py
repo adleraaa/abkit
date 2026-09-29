@@ -59,6 +59,8 @@ def welch_ttest(control: ArrayLike, treatment: ArrayLike, alpha: float = 0.05) -
     """Welch t-test and (1 - alpha) CI for ``mean(treatment) - mean(control)``."""
     a = np.asarray(control, dtype=float)
     b = np.asarray(treatment, dtype=float)
+    if a.size < 2 or b.size < 2:
+        raise ValueError("each arm needs at least 2 observations")
     return welch_from_stats(
         float(a.mean()),
         float(a.var(ddof=1)),
