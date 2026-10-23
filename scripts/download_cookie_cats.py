@@ -8,7 +8,7 @@ so every run analyzes exactly the same file.
 
 The mirror has an MIT LICENSE ("Copyright (c) 2020 0zz10_mac"). That license
 covers the uploader's own work; it cannot grant rights to data owned by DataCamp
-or Tactile Entertainment, and we found no license from them. So the CSV is not
+or Tactile Entertainment, and no license from them was found. So the CSV is not
 committed to this repository.
 """
 
