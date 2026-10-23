@@ -297,7 +297,7 @@ def build_html() -> str:
         f'from the public mirror <a href="{html.escape(d["mirror"])}">'
         f"{html.escape(d['mirror'])}</a> and not redistributed here. SHA-256 of the analyzed "
         f"file: <code>{d['sha256']}</code>. The mirror carries an MIT license from its uploader; "
-        "we found no license from the original data owners.</p>"
+        "no license from the original data owners was found.</p>"
     )
     body.append(html_table(table))
     return (
