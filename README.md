@@ -12,13 +12,6 @@ metrics) do not show up as crashes, only as wrong p-values.
 
 Report page with all figures and tables: https://adleraaa.github.io/abkit/
 
-## How this was built
-
-This project was built with [Claude Code](https://claude.com/claude-code), an AI coding agent.
-All 7 commits made on September 28, 2026 (US Eastern) carry a `Co-Authored-By: Claude` trailer,
-and later README edits were also made with Claude Code. The numbers in this README come from the
-scripts and result files in this repository.
-
 ## Results
 
 All numbers below come from `experiments/run_study.py` (seeded, saved in
