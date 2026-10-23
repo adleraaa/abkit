@@ -12,6 +12,12 @@ metrics) do not show up as crashes, only as wrong p-values.
 
 Report page with all figures and tables: https://adleraaa.github.io/abkit/
 
+## How this was built
+
+This project was built with [Claude Code](https://claude.com/claude-code), an AI coding agent,
+on September 28, 2026 (7 of 7 commits carry a `Co-Authored-By: Claude` trailer). The numbers in
+this README come from the scripts and result files in this repository.
+
 ## Results
 
 All numbers below come from `experiments/run_study.py` (seeded, saved in
@@ -209,8 +215,8 @@ Testing with Cookie Cats" (Rasmus Baath), with data from Tactile Entertainment.
 verifies its SHA-256 (`5ab54d76...342c46bd`, full hash in the script and in
 `results/cookie_cats.json`). The mirror has an MIT LICENSE from its uploader
 ("Copyright (c) 2020 0zz10_mac"). That license covers the uploader's own work and cannot
-grant rights to data owned by DataCamp or Tactile Entertainment, and we found no license
-from them, so the CSV is **not** committed here.
+grant rights to data owned by DataCamp or Tactile Entertainment, and no license from them
+was found, so the CSV is **not** committed here.
 
 ## References
 
